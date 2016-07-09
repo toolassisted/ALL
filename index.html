@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>SFV ALL LOL</title>
+<style>
+
+  body {
+    background-color: #000;
+    color: #fff;
+    font-family: sans-serif;
+    margin-bottom: 500px;
+  }
+
+  path {
+    stroke-width: 1px;
+    stroke: #333;
+    fill: #ddd;
+    vector-effect: non-scaling-stroke;
+  }
+
+  a {
+    color: #0079d3;
+  }
+
+  .GRID line {
+    vector-effect: non-scaling-stroke;
+  }
+
+  .REPLAY line {
+    vector-effect: non-scaling-stroke;
+  }
+
+  .UNOC { display: none; }
+
+  .fred { fill: #c00 !important; }
+
+  .gray { stroke: #333; }
+  .red { stroke: #f00; }
+  .green { stroke: #0f0; }
+  .blue { stroke: #00f; }
+  .cyan { stroke: #0ff; }
+  .yellow { stroke: #ff0; }
+
+  .p1gray { stroke: #333; }
+  .p1red { stroke: #f00; }
+  .p1green { stroke: #0f0; }
+  .p1blue { stroke: #00f; }
+  .p1hit { stroke: #c6f; }
+  .p1cyan { stroke: #0ff; }
+  .p1yellow { stroke: #ff0; }
+
+  .p2gray { stroke: #333; }
+  .p2red { stroke: #f66; }
+  .p2green { stroke: #6f6; }
+  .p2blue { stroke: #66f; }
+  .p2hit { stroke: #c6f; }
+  .p2cyan { stroke: #6ff; }
+
+  .hitbox { color: #f99; }
+  .hit { color: #969; }
+  .first { color: #cfc; background-color: #363;}
+  .iasa1 { color: #999;}
+
+  #REPLAYS {
+    text-align: center;
+    /*display: inline-block;*/
+  }
+
+  #REPLAYS  !svg + div {
+    /*display: inline-block;*/
+  }
+
+  #REPLAYS div {
+    height: 500px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    display: inline-block;
+    padding-right: 2em;
+  }
+
+  #LINKS {
+    /*height: 500px;*/
+    white-space: nowrap;
+    overflow: auto;
+  }
+
+  #FRAMES, #KD, #TOTALS {
+    white-space: nowrap;
+    /*height: 500px;*/
+    /*overflow-x: hidden;*/
+    /*overflow-y: auto;*/
+    /*display: inline-block;*/
+    /*padding-right: 2em;*/
+  }
+
+  #FRAMES div {
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  table.FRAMES {
+    table-layout: fixed;
+    /*font: 10px sans-serif;*/
+    text-align: center;
+    color: #ccc;
+  }
+
+  table.FRAMES thead tr {
+    background-color: #030; 
+  }
+
+  table.FRAMES tbody tr:nth-child(even) {
+    background-color: #333; 
+  }
+
+  table.FRAMES tbody tr:nth-child(odd) {
+    background-color: #111;
+  }
+
+ table.FRAMES tbody tr td:nth-child(3) {
+    color: #9cc;
+  }
+ table.FRAMES tbody tr td:nth-child(4) {
+    color: #c99;
+  }
+  table.FRAMES td {
+    white-space: nowrap;
+    padding: 5px;
+  }
+
+  table.FRAMES th {
+    white-space: nowrap;
+    padding: 5px;
+    cursor: s-resize;
+  }
+
+  table.FRAMES tbody tr:hover {
+    background-color: #060;
+  }
+
+  table.FRAMES tr.UC {
+    background-color: #060;
+  }
+  table.FRAMES tr:nth-child(even) td.UC {  
+    background-color: #050;
+  }
+  table.FRAMES tr:nth-child(odd) td.UC {
+    background-color: #030;
+  }
+
+  #LINKS div.COL {
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  #LINKS div.COL div {
+    text-align: left;
+    padding: 10px;
+  }
+
+  #LINKS button {
+    background-color: #ccc;
+    padding: 10px 10px;
+  }
+
+  svg {
+    /*border: 1px solid #111;*/
+    /*margin-top: 10px;*/
+  }
+
+  .REPLAY rect {
+    stroke-width: 1px;
+    /*stroke: #333;*/
+    fill: none;
+    /*opacity: 0.8;*/
+    mix-blend-mode: screen;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .REPLAY rect.clip {
+    fill: #330;
+  }
+
+  .REPLAY text {
+    text-anchor: middle;
+    fill: #999;
+    font: 8px sans-serif;
+  }
+
+  .rects text {
+    text-anchor: middle;
+    fill: #999;
+    font: 10px sans-serif;
+  }
+
+  .axis {
+    font: 10px sans-serif;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+  }
+
+  .axis text {
+    fill: #ddd;
+  }
+
+  .axis .domain {
+    fill: none;
+    stroke: #000;
+    stroke-opacity: .3;
+    stroke-width: 10px;
+    stroke-linecap: round;
+  }
+
+  .axis .halo {
+    fill: none;
+    stroke: #ddd;
+    stroke-width: 8px;
+    stroke-linecap: round;
+  }
+
+  .slider .handle {
+    fill: #fff;
+    fill-opacity: .75;
+    stroke: #000;
+    stroke-opacity: .5;
+    stroke-width: 1.25px;
+    cursor: crosshair;
+  }
+
+  #OKI > span.GRID {
+    color: #ccc;
+  }
+
+  .GRID > span:nth-child(10n) {
+    color: #eee;
+  }
+
+
+  .GRID > span.ACTIVE {
+    color: #fcc;
+  }
+
+  .GRID > span.STARTUP {
+    color: #aaa;
+  }
+
+  .GRID > span.RECOVERY {
+    color: #aaa;
+  }
+
+  .GRID > span.WAKEUP {
+    color: #cfc;
+  }
+
+  .GRID > span.FK {
+    color: #ccc;
+  }
+
+
+  .UCLICK:hover {
+    color: #fff;
+    background-color: #990;
+    cursor: pointer;
+  }
+
+  button.CHAR {
+    padding: 5px;
+    margin: 3px;
+    /*width: 8%;*/
+    background-color: #999;
+  }
+
+  button.SEL {
+    background-color: #ffc;
+  }
+
+  #OKI {    
+    cursor: pointer;
+  }
+
+  .CMD {
+    color: #999;
+  }
+
+  .UCY1 {    
+    background-color: #033;
+  }
+
+  .UCY2 {    
+    background-color: #033;
+  }
+
+  .UCY3 {    
+    background-color: #220;
+  }
+
+  .UCY4 {    
+    background-color: #220;
+  }
+
+  .UCY5 {    
+    background-color: #220;
+  }
+
+  .UCY6 {    
+    background-color: #220;
+  }
+
+  .UCY7 {    
+    background-color: #220;
+  }
+
+
+  .UCOKI {
+    background-color: #020;
+  }
+
+  #FRAMEKILLS {
+    line-height: 1.5em;
+  }
+
+  .FRAMEKILL {
+    color: #999;
+  }
+
+  button.CHARRESET {
+    margin-left: 50px;
+  }
+ 
+</style>
+
+</head>
+<body>
+<div id="ALL"></div>
+<script src="d3.v4.min.js"></script>
+<script>
+
+d3.json("ALL_THROW_WALK.json", function(error,data){
+  //console.log(error,data);
+
+  var ALL = d3.select("#ALL");
+  var TABLE = ALL.append("table").classed("FRAMES",true);
+  var THEAD = TABLE.append("thead").append("tr");
+  var TB = TABLE.append("tbody");
+  var TH = ["CHAR", 
+            "THROW", "HURT", "HIT", "DIST",
+            "WALK THROW", "DIST",
+            "WALK", "DIST", "WALK", "DIST",
+            ];
+
+  THEAD.selectAll("th").data(TH).enter().append("th")
+          .text(function(d,i){return d;})
+          .on("click",function(d,i){
+            TR.sort(function(a, b) { 
+              if (i == 0) 
+                return a[i] < b[i] ? -1 : a[i] > b[i] ? 1 : a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0; 
+              else
+                return a[i] > b[i] ? -1 : a[i] < b[i] ? 1 : a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0; 
+            });
+            TR.selectAll(".UC").classed("UC",false);
+            TR.selectAll("td:nth-child("+(i+1)+")").classed("UC",true);
+          });
+  
+  var CHARS = [];
+  for (var i = 0; i < data.length; i+=4 ) {
+    var F5T = data[i+0];
+    var F4T = data[i+1];
+    var F6W = data[i+2];
+    var F4W = data[i+3];
+    var CHAR = [];
+    CHAR.push(data[i].c);
+
+    CHAR.push(F5T.m);
+    CHAR.push((2 + F5T.f[6].c6[3].rx + F5T.f[6].c6[3].rw).toFixed(4));
+    CHAR.push((2 + F5T.f[6].c5[0].rx + F5T.f[6].c5[0].rw).toFixed(4));
+    CHAR.push((F5T.f[6].c5[0].rx + F5T.f[6].c5[0].rw - (F5T.f[6].c6[3].rx + F5T.f[6].c6[3].rw)).toFixed(4));
+
+    CHAR.push(F6W.m + " " + F5T.m);
+    CHAR.push((
+      (F5T.f[6].c5[0].rx + F5T.f[6].c5[0].rw) 
+      - (F5T.f[6].c6[3].rx + F5T.f[6].c6[3].rw) 
+      + (F6W.f[2].x2 - F6W.f[1].x2)
+      ).toFixed(4));
+
+    CHARS.push(CHAR);
+
+    CHAR.push(F6W.m);
+    CHAR.push((F6W.f[2].x2 - F6W.f[1].x2).toFixed(4));
+    CHAR.push(F4W.m);
+    CHAR.push((F4W.f[1].x2 - F4W.f[2].x2).toFixed(4));
+
+  }
+
+  var TR = TB.selectAll("tr").data(CHARS).enter().append("tr");
+  TR.selectAll("td").data(function(d){return d;}).enter().append("td").text(function(d,i){ return d; });
+  TR.selectAll("td:nth-child(6)").each(function(d,i){ 
+    var pd = d3.select(this.parentNode).datum();
+    var g = d3.select(this).text("").append("svg").attr("width",100).attr("height",20);
+    g.append("rect").attr("x",90-100*pd[3]).attr("width",100*pd[3]).attr("height",20).attr("fill","#600");
+    g.append("rect").attr("x",90-100*pd[3]).attr("width",100*pd[2]).attr("height",20).attr("fill","#066");
+    g.append("rect").attr("x",90).attr("width",100*pd[8]).attr("height",20).attr("fill","#900");
+  });
+  TR.selectAll("td:nth-child(2)").each(function(d,i){ 
+    var pd = d3.select(this.parentNode).datum();
+    var g = d3.select(this).text("").append("svg").attr("width",100).attr("height",20);
+    g.append("rect").attr("width",100*pd[3]).attr("height",20).attr("fill","#600");
+    g.append("rect").attr("width",100*pd[2]).attr("height",20).attr("fill","#066");
+  });
+
+});
+</script>
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-72771119-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>
