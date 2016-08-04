@@ -348,6 +348,7 @@ d3.json("ALL_THROW_WALK.json", function(error,data){
             "THROW", "HURT", "HIT", "DIST",
             "WALK THROW", "DIST",
             "WALK", "DIST", "WALK", "DIST",
+            "STAND","HURT"
             ];
 
   THEAD.selectAll("th").data(TH).enter().append("th")
@@ -390,6 +391,8 @@ d3.json("ALL_THROW_WALK.json", function(error,data){
     CHAR.push((F6W.f[2].x2 - F6W.f[1].x2).toFixed(4));
     CHAR.push(F4W.m);
     CHAR.push((F4W.f[1].x2 - F4W.f[2].x2).toFixed(4));
+    CHAR.push("5S");
+    CHAR.push((2 + F5T.f[0].c6[1].rx + F5T.f[0].c6[1].rw).toFixed(4));
 
   }
 
@@ -397,16 +400,16 @@ d3.json("ALL_THROW_WALK.json", function(error,data){
   TR.selectAll("td").data(function(d){return d;}).enter().append("td").text(function(d,i){ return d; });
   TR.selectAll("td:nth-child(6)").each(function(d,i){ 
     var pd = d3.select(this.parentNode).datum();
-    var g = d3.select(this).text("").append("svg").attr("width",100).attr("height",20);
-    g.append("rect").attr("x",90-100*pd[3]).attr("width",100*pd[3]).attr("height",20).attr("fill","#600");
-    g.append("rect").attr("x",90-100*pd[3]).attr("width",100*pd[2]).attr("height",20).attr("fill","#066");
-    g.append("rect").attr("x",90).attr("width",100*pd[8]).attr("height",20).attr("fill","#900");
+    var g = d3.select(this).text("").append("svg").attr("width",100).attr("height",10);
+    g.append("rect").attr("x",90-100*pd[3]).attr("width",100*pd[3]).attr("height",10).attr("fill","#600");
+    g.append("rect").attr("x",90-100*pd[3]).attr("width",100*pd[2]).attr("height",10).attr("fill","#066");
+    g.append("rect").attr("x",90).attr("width",100*pd[8]).attr("height",10).attr("fill","#900");
   });
   TR.selectAll("td:nth-child(2)").each(function(d,i){ 
     var pd = d3.select(this.parentNode).datum();
-    var g = d3.select(this).text("").append("svg").attr("width",100).attr("height",20);
-    g.append("rect").attr("width",100*pd[3]).attr("height",20).attr("fill","#600");
-    g.append("rect").attr("width",100*pd[2]).attr("height",20).attr("fill","#066");
+    var g = d3.select(this).text("").append("svg").attr("width",100).attr("height",10);
+    g.append("rect").attr("width",100*pd[3]).attr("height",10).attr("fill","#600");
+    g.append("rect").attr("width",100*pd[2]).attr("height",10).attr("fill","#066");
   });
 
 });
