@@ -12,6 +12,70 @@
     margin-bottom: 500px;
   }
 
+  #STAGE line, #STAGE1 line {
+    stroke-width: 1px;
+    stroke: #999;
+    fill: #ddd;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .STANDBAR rect {
+    fill: #933;
+    stroke: none;
+    transform: translate(-50%, -100%);
+  }
+
+  rect {
+/*    stroke-width: 1px;*/
+/*    stroke: #999;*/
+/*    fill: none;*/
+/*    vector-effect: non-scaling-stroke;*/
+  }
+
+  #STAGE rect.HURT {
+    /*opacity: 0.2;*/
+  }
+
+  #STAGE rect.GRAB {
+    /*opacity: 0.2;*/
+  }
+
+  #STAGE rect.PROJINV {
+    /*opacity: 0.2;*/
+  }
+
+  rect.HURT {
+    stroke-width: 1px;
+    stroke: #090;
+    fill: none;
+    vector-effect: non-scaling-stroke;
+    mix-blend-mode: screen;
+  }
+
+  rect.PROJINV {
+    stroke-width: 1px;
+    stroke: #960;
+    fill: none;
+    vector-effect: non-scaling-stroke;
+    mix-blend-mode: screen;
+  }
+
+  rect.GRAB {
+    stroke-width: 1px;
+    stroke: #009;
+    fill: none;
+    vector-effect: non-scaling-stroke;
+    mix-blend-mode: screen;
+  }
+
+  rect.HIT {
+    stroke-width: 1px;
+    stroke: #900;
+    fill: none;
+    vector-effect: non-scaling-stroke;
+    mix-blend-mode: screen;
+  }
+
   path {
     stroke-width: 1px;
     stroke: #333;
@@ -333,12 +397,17 @@
 
 </head>
 <body>
+<div id="FRAMES">
 <div id="ALL"></div>
+<div><svg id="STAGE" width="320" height="900"><g id="G00"><g id="G0" transform="translate(500 450)scale(200)"><g id="G"></g><g id="GG"></g><line x1="-2" y1="0" x2="+2" y2="0"></line><line x1="-2" y1="2.1" x2="+2" y2="2.1"></line></g></g></svg></div>
+</div>
 <script src="d3.v4.min.js"></script>
 <script>
 
 d3.json("ALL_THROW_WALK.json", function(error,data){
   //console.log(error,data);
+
+  var STAGE = d3.select("#STAGE");
 
   var ALL = d3.select("#ALL");
   var TABLE = ALL.append("table").classed("FRAMES",true);
@@ -354,7 +423,9 @@ d3.json("ALL_THROW_WALK.json", function(error,data){
   THEAD.selectAll("th").data(TH).enter().append("th")
           .text(function(d,i){return d;})
           .on("click",function(d,i){
-            TR.sort(function(a, b) { 
+            TR.sort(function(da, db) { 
+              var a = da.CHAR;
+              var b = db.CHAR;
               if (i == 0) 
                 return a[i] < b[i] ? -1 : a[i] > b[i] ? 1 : a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0; 
               else
@@ -385,7 +456,7 @@ d3.json("ALL_THROW_WALK.json", function(error,data){
       + (F6W.f[2].x2 - F6W.f[1].x2)
       ).toFixed(4));
 
-    CHARS.push(CHAR);
+    CHARS.push({CHAR:CHAR,F5T:F5T});
 
     CHAR.push(F6W.m);
     CHAR.push((F6W.f[2].x2 - F6W.f[1].x2).toFixed(4));
@@ -397,20 +468,43 @@ d3.json("ALL_THROW_WALK.json", function(error,data){
   }
 
   var TR = TB.selectAll("tr").data(CHARS).enter().append("tr");
-  TR.selectAll("td").data(function(d){return d;}).enter().append("td").text(function(d,i){ return d; });
+  TR.selectAll("td").data(function(d){return d.CHAR;}).enter().append("td").text(function(d,i){ return d; });
   TR.selectAll("td:nth-child(6)").each(function(d,i){ 
-    var pd = d3.select(this.parentNode).datum();
+    var pd = d3.select(this.parentNode).datum().CHAR;
     var g = d3.select(this).text("").append("svg").attr("width",100).attr("height",10);
     g.append("rect").attr("x",90-100*pd[3]).attr("width",100*pd[3]).attr("height",10).attr("fill","#600");
     g.append("rect").attr("x",90-100*pd[3]).attr("width",100*pd[2]).attr("height",10).attr("fill","#066");
     g.append("rect").attr("x",90).attr("width",100*pd[8]).attr("height",10).attr("fill","#900");
   });
   TR.selectAll("td:nth-child(2)").each(function(d,i){ 
-    var pd = d3.select(this.parentNode).datum();
+    var pd = d3.select(this.parentNode).datum().CHAR;
     var g = d3.select(this).text("").append("svg").attr("width",100).attr("height",10);
     g.append("rect").attr("width",100*pd[3]).attr("height",10).attr("fill","#600");
     g.append("rect").attr("width",100*pd[2]).attr("height",10).attr("fill","#066");
   });
+
+  function THROWSTAGE(dd,i) {
+    var d = dd.F5T.f[6];
+    var G = d3.select("#G");
+    G.selectAll("*").remove();
+    d.c6.forEach(function(c){
+      G.append("rect").attr("x",c.rx).attr("y",-c.ry-c.rh).attr("width",c.rw).attr("height",c.rh).classed((c.t&0x4)==0x4 ? "GRAB" : (c.t&0x2)==0x0 ? "PROJINV" : "HURT",true);
+    });
+    d.c5.forEach(function(c){
+      if (c.t != 3 && c.t !=4) G.append("rect").attr("x",c.rx).attr("y",-c.ry-c.rh).attr("width",c.rw).attr("height",c.rh).classed("HIT",true);
+    });
+
+    d = dd.F5T.f[0];
+    d.c6.forEach(function(c){
+      G.append("rect").attr("x",c.rx).attr("y",-c.ry-c.rh+2.1).attr("width",c.rw).attr("height",c.rh).classed((c.t&0x4)==0x4 ? "GRAB" : (c.t&0x2)==0x0 ? "PROJINV" : "HURT",true);
+    });
+    d.c5.forEach(function(c){
+      if (c.t != 3 && c.t !=4) G.append("rect").attr("x",c.rx).attr("y",-c.ry-c.rh+2.1).attr("width",c.rw).attr("height",c.rh).classed("HIT",true);
+    });
+  }
+  
+  TR.on('mouseenter', THROWSTAGE);
+  TR.on('click', THROWSTAGE);
 
 });
 </script>
