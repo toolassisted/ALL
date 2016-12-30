@@ -2,14 +2,20 @@
 <html>
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=0.3, minimum-scale=0.10, maximum-scale=100.0, user-scalable=1.0">
 <title>SFV ALL LOL</title>
 <style>
-
+  html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+  }
   body {
     background-color: #000;
     color: #fff;
     font-family: sans-serif;
-    margin-bottom: 500px;
+    /*margin-bottom: 500px;*/
+    display: flex;
   }
 
   #STAGE line, #STAGE1 line {
@@ -393,18 +399,38 @@
     margin-left: 50px;
   }
  
+  #FRAMES {
+    display: flex;
+    flex: 1;
+  }
+  #ALL {
+    -webkit-overflow-scrolling: touch;
+    overflow-y: auto;
+    padding-right: 1em;
+    /*margin-right: 1em;*/
+    flex: 0 0 auto;
+    padding-bottom: 50vh;
+  }
+  #STAGEDIV {
+    -webkit-overflow-scrolling: touch;
+    overflow-y: auto;
+    padding-right: 1em;
+    /*margin-right: 1em;*/
+    flex: 1;
+    padding-bottom: 50vh;
+  }
 </style>
 
 </head>
 <body>
 <div id="FRAMES">
 <div id="ALL"></div>
-<div><svg id="STAGE" width="320" height="900"><g id="G00"><g id="G0" transform="translate(500 450)scale(200)"><g id="G"></g><g id="GG"></g><line x1="-2" y1="0" x2="+2" y2="0"></line><line x1="-2" y1="2.1" x2="+2" y2="2.1"></line></g></g></svg></div>
+<div id="STAGEDIV"><svg id="STAGE" width="640" height="900"><g id="G00"><g id="G0" transform="translate(500 450)scale(200)"><g id="G"></g><g id="GG"></g><line x1="-2" y1="0" x2="+2" y2="0"></line><line x1="-2" y1="2.1" x2="+2" y2="2.1"></line></g></g></svg></div>
 </div>
 <script src="d3.v4.min.js"></script>
 <script>
 
-d3.json("ALL_THROW_WALK.json", function(error,data){
+d3.json("ALL_THROW_WALK_S2.json", function(error,data){
   //console.log(error,data);
 
   var STAGE = d3.select("#STAGE");
@@ -442,7 +468,7 @@ d3.json("ALL_THROW_WALK.json", function(error,data){
     var F6W = data[i+2];
     var F4W = data[i+3];
     var CHAR = [];
-    CHAR.push(data[i].c);
+    CHAR.push(data[i].c.replace("S2"," S2").replace("BETA"," BETA"));
 
     CHAR.push(F5T.m);
     CHAR.push((2 + F5T.f[6].c6[3].rx + F5T.f[6].c6[3].rw).toFixed(4));
